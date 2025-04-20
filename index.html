@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>CodeQuest - ステージ1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Georgia', serif;
+      background-color: #f5f0e6;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    header {
+      background: #2f2f2f;
+      color: #fff;
+      padding: 10px;
+      text-align: center;
+      font-size: 1.4em;
+    }
+    .container {
+      flex: 1;
+      display: flex;
+      flex-direction: row;
+    }
+    .story {
+      flex: 1;
+      padding: 20px;
+      background-color: #e6ddc4;
+      border-right: 2px solid #ccc;
+    }
+    .code-area {
+      flex: 1;
+      padding: 20px;
+      background-color: #fff;
+    }
+    textarea {
+      width: 100%;
+      height: 200px;
+      font-family: monospace;
+      font-size: 1em;
+    }
+    .output {
+      background-color: #eee;
+      padding: 10px;
+      margin-top: 10px;
+      height: 100px;
+      overflow: auto;
+    }
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      font-size: 1em;
+    }
+  </style>
+</head>
+<body>
+
+<header>CodeQuest：ステージ1「printの魔法」</header>
+
+<div class="container">
+  <div class="story">
+    <p><strong>リリィ：</strong>「この魔法陣に言葉を刻んで、私に声を届けて！」</p>
+    <p>ヒント：<code>print("Hello")</code> を使ってみよう</p>
+  </div>
+
+  <div class="code-area">
+    <textarea id="codeInput">print("Hello")</textarea><br>
+    <button onclick="runCode()">Run</button>
+    <div class="output" id="outputArea"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/skulpt.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/skulpt-stdlib.js"></script>
+<script>
+  function builtinRead(x) {
+    if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][x] === undefined) {
+      throw "File not found: '" + x + "'";
+    }
+    return Sk.builtinFiles["files"][x];
+  }
+
+  function runCode() {
+    let prog = document.getElementById("codeInput").value;
+    let output = document.getElementById("outputArea");
+    output.innerHTML = "";
+    Sk.configure({ output: (text) => output.innerHTML += text + "<br>", read: builtinRead });
+    Sk.misceval.asyncToPromise(() => Sk.importMainWithBody("<stdin>", false, prog))
+      .catch((err) => output.innerHTML = "<span style='color:red'>" + err.toString() + "</span>");
+  }
+</script>
+
+</body>
+</html>
